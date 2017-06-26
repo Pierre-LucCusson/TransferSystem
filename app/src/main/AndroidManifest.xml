@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="MyQrActivity"
+            android:label="@string/myQrActivityName">
+        </activity>
+        <activity
+            android:name="QrCameraActivity"
+            android:label="@string/qrCameraActivityName">
+        </activity>
+        <activity
+            android:name="ContactsActivity"
+            android:label="@string/contactsActivityName">
+        </activity>
     </application>
 
 </manifest>

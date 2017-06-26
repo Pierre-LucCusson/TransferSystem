@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/showMyQrButton"
             android:onClick="showMyQr"/>
 
         <Button
@@ -34,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/cameraQrButton"
             android:onClick="openQrCamera"
             android:visibility="visible"/>
 
@@ -42,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/showContactsButton"
             android:onClick="showContacts"/>
     </LinearLayout>
 

@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">TransferSystem</string>
+    <string name="app_name">Transfer System</string>
+
+    <string name="showMyQrButton">My QR</string>
+    <string name="cameraQrButton">QR Camera</string>
+    <string name="showContactsButton">Contacts</string>
+
+    <string name="backButton">Back</string>
+
+    <string name="myQrActivityName">My QR Code</string>
+
+    <string name="qrCameraActivityName">QR Camera</string>
+
+    <string name="contactsActivityName">My Contacts</string>
 </resources>
