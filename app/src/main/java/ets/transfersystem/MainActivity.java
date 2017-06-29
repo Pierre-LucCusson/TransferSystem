@@ -7,12 +7,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+
+
+    ServerLP serverLP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        serverLP = new ServerLP(5555);
+        try {
+            serverLP.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //Show My QR button
         final Button myQrButton = (Button) findViewById(R.id.myQrButton);
