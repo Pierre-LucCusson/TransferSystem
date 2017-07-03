@@ -12,4 +12,8 @@
     <string name="qrCameraActivityName">QR Camera</string>
 
     <string name="contactsActivityName">My Contacts</string>
+    <string name="listView">My List Of Contacts</string>
+
+    <string name="result_text_default">Please focus the camera on the QR code</string>
+
 </resources>
