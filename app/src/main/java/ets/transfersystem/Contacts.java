@@ -30,11 +30,10 @@ public class Contacts {
         editor.commit();
     }
 
-    public void saveContacts(String deviceID, String ipAddresse) {
-        String information = deviceID + ":" + ipAddresse;
+    public void saveContact(String deviceID, String ipAddresse) {
         List<String> ets = Arrays.asList(deviceID, ipAddresse);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(deviceID, information);
+        editor.putString(deviceID, deviceID + ":" + ipAddresse);
         editor.commit();
     }
 

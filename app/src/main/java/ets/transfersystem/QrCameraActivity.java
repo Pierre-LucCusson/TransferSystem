@@ -121,10 +121,17 @@ public class QrCameraActivity extends AppCompatActivity {
                             vibrator.vibrate(1000);
                             if (!txtResult.getText().equals(qrCodes.valueAt(0).displayValue)) {
                                 txtResult.setText(qrCodes.valueAt(0).displayValue);
-                                Log.d("QRread", String.format(qrCodes.valueAt(0).displayValue));
 
-                                Contacts contacts = new Contacts(getSharedPreferences("ContactsTest", 0));
-                                contacts.saveContact(qrCodes.valueAt(0).displayValue);
+                                QrCode qrCode = new QrCode(qrCodes.valueAt(0).displayValue);
+                                if (qrCode.isValide) {
+                                    Contacts contacts = new Contacts(getSharedPreferences("ContactsTest2", 0));
+//                                    contacts.saveContact(qrCodes.valueAt(0).displayValue);
+                                    contacts.saveContact(qrCode.getDeviceId(), qrCode.getIpAddress());
+                                    Log.d("Qrcode", qrCode.getDeviceId() + ":" + qrCode.getIpAddress() + " was saved");
+                                }
+                                else {
+                                    Log.d("Qrcode", String.format(qrCodes.valueAt(0).displayValue + " IS INVALID"));
+                                }
 
                                 startActivity(new Intent(QrCameraActivity.this, MainActivity.class));
                             }

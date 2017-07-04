@@ -16,7 +16,7 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest", 0));
+        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest2", 0));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contacts.getAllContacts());
 

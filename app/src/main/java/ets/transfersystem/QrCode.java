@@ -27,12 +27,19 @@ public class QrCode {
     private Bitmap qrCode;
     private String deviceId;
     private String ipAddress;
+    public Boolean isValide = false;
 
     public QrCode(Activity activity) {
         this.activity = activity;
         setMyDeviceId();
         setMyIpAddress();
         qrCode = encodeAsBitmap(deviceId+":"+ipAddress);
+        Log.d("Qrcode", deviceId+":"+ipAddress);
+    }
+
+    public QrCode(String information) {
+        setDeviceIdAndIpAddress(information);
+        qrCode = encodeAsBitmap(information);
         Log.d("Qrcode", deviceId+":"+ipAddress);
     }
 
@@ -47,8 +54,25 @@ public class QrCode {
         ipAddress = Formatter.formatIpAddress(ip);
     }
 
+    public void setDeviceIdAndIpAddress(String information) {
+        String[] info = information.split(":");
+        if (info.length == 2) {
+            deviceId = info[0];
+            ipAddress = info[1];
+            isValide = true;
+        }
+    }
+
     public Bitmap getQrCode() {
         return qrCode;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
     }
 
     //Source: https://stackoverflow.com/questions/28232116/android-using-zxing-generate-qr-code
@@ -82,6 +106,4 @@ public class QrCode {
         }
         catch(WriterException ex){return null;}
     }
-
-
 }
