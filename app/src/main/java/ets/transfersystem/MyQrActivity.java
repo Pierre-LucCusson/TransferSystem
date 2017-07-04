@@ -1,5 +1,6 @@
 package ets.transfersystem;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -40,7 +41,8 @@ public class MyQrActivity extends AppCompatActivity {
 
         //My QR Code Image
         ImageView qrCodeImageView = (ImageView) findViewById(R.id.myQrCode);
-        Bitmap qrBitmap = new QrCode().getQrCode();
+
+        Bitmap qrBitmap = new QrCode(this).getQrCode();
         qrCodeImageView.setImageBitmap(qrBitmap);
 
     }
@@ -50,6 +52,4 @@ public class MyQrActivity extends AppCompatActivity {
         Log.d("ButtonClick", String.format("Back button from my QR was click"));
         startActivity(new Intent(MyQrActivity.this, MainActivity.class));
     }
-
-
 }

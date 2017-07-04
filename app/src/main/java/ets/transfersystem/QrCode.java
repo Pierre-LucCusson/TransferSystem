@@ -1,6 +1,13 @@
 package ets.transfersystem;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.text.format.Formatter;
+import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -16,22 +23,28 @@ import static android.graphics.Color.WHITE;
 
 public class QrCode {
 
+    private Activity activity;
     private Bitmap qrCode;
     private String deviceId;
     private String ipAddress;
 
-    public QrCode() {
+    public QrCode(Activity activity) {
+        this.activity = activity;
         setMyDeviceId();
         setMyIpAddress();
         qrCode = encodeAsBitmap(deviceId+":"+ipAddress);
+        Log.d("Qrcode", deviceId+":"+ipAddress);
     }
 
     private void setMyDeviceId() {
-        deviceId = "DEVICE_ID";
+        deviceId = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     private void setMyIpAddress() {
-        ipAddress = "IP_ADDRESS";
+        WifiManager wifiMgr = (WifiManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+        ipAddress = Formatter.formatIpAddress(ip);
     }
 
     public Bitmap getQrCode() {

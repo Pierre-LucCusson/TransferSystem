@@ -122,8 +122,11 @@ public class QrCameraActivity extends AppCompatActivity {
                             if (!txtResult.getText().equals(qrCodes.valueAt(0).displayValue)) {
                                 txtResult.setText(qrCodes.valueAt(0).displayValue);
                                 Log.d("QRread", String.format(qrCodes.valueAt(0).displayValue));
+
                                 Contacts contacts = new Contacts(getSharedPreferences("ContactsTest", 0));
                                 contacts.saveContact(qrCodes.valueAt(0).displayValue);
+
+                                startActivity(new Intent(QrCameraActivity.this, MainActivity.class));
                             }
                         }
                     });
