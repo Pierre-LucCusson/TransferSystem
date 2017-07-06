@@ -4,6 +4,8 @@
     <string name="showMyQrButton">My QR</string>
     <string name="cameraQrButton">QR Camera</string>
     <string name="showContactsButton">Contacts</string>
+    <string name="myCurrentFriendContactsButton">Friends contacts</string>
+    <string name="deleteFriendButton">Delete This Friend</string>
 
     <string name="backButton">Back</string>
 
