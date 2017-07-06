@@ -1,9 +1,14 @@
 package ets.transfersystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Pierre-Luc on 2017-06-26.
@@ -23,6 +28,18 @@ public class ContactsActivity extends AppCompatActivity {
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
+                TextView textView = (TextView) viewClicked;
+                QrCode qrCode = new QrCode(textView.getText().toString());
+//                String msg = "itemPosition=" + position + " text=" + textView.getText().toString();
+                String msg = "itemPosition=" + position + " deviceID=" + qrCode.getDeviceId() + " iPaddresse=" + qrCode.getIpAddress();
+                Toast.makeText(ContactsActivity.this, msg, Toast.LENGTH_LONG).show();
+
+                startActivity(new Intent(ContactsActivity.this, MainActivity.class));
+            }
+        });
 
     }
 }
