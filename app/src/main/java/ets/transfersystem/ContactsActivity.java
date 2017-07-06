@@ -41,7 +41,11 @@ public class ContactsActivity extends AppCompatActivity {
                 String msg = "itemPosition=" + position + " deviceID=" + qrCode.getDeviceId() + " iPaddresse=" + qrCode.getIpAddress();
                 Toast.makeText(ContactsActivity.this, msg, Toast.LENGTH_LONG).show();
 
-                startActivity(new Intent(ContactsActivity.this, MainActivity.class));
+                Intent intent = new Intent(ContactsActivity.this, MainActivity.class);
+                intent.putExtra("EXTRA_CURRENT_FRIEND", qrCode.getDeviceId() + ":" + qrCode.getIpAddress());
+                intent.putExtra("EXTRA_CURRENT_FRIEND_ID", qrCode.getDeviceId());
+                intent.putExtra("EXTRA_CURRENT_FRIEND_IP", qrCode.getIpAddress());
+                startActivity(intent);
             }
         });
 

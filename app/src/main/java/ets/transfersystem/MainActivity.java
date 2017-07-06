@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -55,6 +56,16 @@ public class MainActivity extends AppCompatActivity {
                 showContacts(view);
             }
         } );
+
+        //My Current Friend
+        final TextView myCurrentFriend = (TextView) findViewById(R.id.myCurrentFriend);
+        String myCurrentFriendInfo = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND");
+        if(myCurrentFriendInfo == null) {
+            myCurrentFriend.setText("Please select a contact");
+        }
+        else {
+            myCurrentFriend.setText(myCurrentFriendInfo);
+        }
     }
 
     public void showMyQr(View view) {

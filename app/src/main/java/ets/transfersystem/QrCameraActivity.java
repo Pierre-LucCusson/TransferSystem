@@ -132,7 +132,11 @@ public class QrCameraActivity extends AppCompatActivity {
                                     Log.d("Qrcode", String.format(qrCodes.valueAt(0).displayValue + " IS INVALID"));
                                 }
 
-                                startActivity(new Intent(QrCameraActivity.this, MainActivity.class));
+                                Intent intent = new Intent(QrCameraActivity.this, MainActivity.class);
+                                intent.putExtra("EXTRA_CURRENT_FRIEND", qrCode.getDeviceId() + ":" + qrCode.getIpAddress());
+                                intent.putExtra("EXTRA_CURRENT_FRIEND_ID", qrCode.getDeviceId());
+                                intent.putExtra("EXTRA_CURRENT_FRIEND_IP", qrCode.getIpAddress());
+                                startActivity(intent);
                             }
                         }
                     });
