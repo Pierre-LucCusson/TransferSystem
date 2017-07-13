@@ -40,6 +40,12 @@ public class Contacts {
         return settings.getString(deviceID, "");
     }
 
+    public void deleteContact(String deviceID) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove(deviceID);
+        editor.commit();
+    }
+
     public String[] getAllContactsToString() {
         Map<String, ?> mapsContacts = settings.getAll();
         return mapsContacts.values().toArray(new String[0]);

@@ -17,18 +17,20 @@ import android.widget.Toast;
 
 public class FriendsContactsActivity extends AppCompatActivity {
 
+    private Contacts friendsContacts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest2", 0));
-//        Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
+        friendsContacts = new Contacts(getSharedPreferences(getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"), 0));
+        Log.d("Contacts toJson", String.format(friendsContacts.getAllContactsToJson()));
 //
 //        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
 //        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contacts.getAllContactsToString());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, friendsContacts.getAllContactsToString());
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
@@ -46,6 +48,8 @@ public class FriendsContactsActivity extends AppCompatActivity {
 //                intent.putExtra("EXTRA_CURRENT_FRIEND_ID", qrCode.getDeviceId());
 //                intent.putExtra("EXTRA_CURRENT_FRIEND_IP", qrCode.getIpAddress());
                 startActivity(intent);
+
+                //TODO
             }
         });
 

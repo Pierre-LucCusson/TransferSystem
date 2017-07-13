@@ -117,12 +117,19 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Show My Friends Contacts button was click"));
         //TODO
-//        startActivity(new Intent(MainActivity.this, FriendsContactsActivity.class));
+        startActivity(new Intent(MainActivity.this, FriendsContactsActivity.class));
     }
 
     public void deleteThisFriend(View view) {
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Delete This Friend button was click"));
-        //TODO
+
+        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
+        contacts.deleteContact(getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
+
+        getIntent().removeExtra("EXTRA_CURRENT_FRIEND");
+        getIntent().removeExtra("EXTRA_CURRENT_FRIEND_ID");
+        getIntent().removeExtra("EXTRA_CURRENT_FRIEND_IP");
+        startActivity(getIntent());
     }
 }
