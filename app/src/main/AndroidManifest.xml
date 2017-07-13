@@ -33,6 +33,8 @@
             android:name="ContactsActivity"
             android:label="@string/contactsActivityName">
         </activity>
+
+        <service android:name=".HttpHandler" />
     </application>
 
 </manifest>
