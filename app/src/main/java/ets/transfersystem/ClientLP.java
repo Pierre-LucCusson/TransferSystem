@@ -45,7 +45,7 @@ public class ClientLP {
 
     private String sendRequest(String url) throws IOException
     {
-        Request request = new Request.Builder().url(url+HTTPRequests.CHECK_FILE_CHANGE).build();
+        Request request = new Request.Builder().url("http://" + url+HTTPRequests.CHECK_FILE_CHANGE).build();
 
         try (Response response = client.newCall(request).execute()){
             if (response.code() == 200)

@@ -26,8 +26,8 @@ public class ServerLP extends NanoHTTPD {
         blockingQueue = new LinkedBlockingQueue<Event>();
     }
 
-    public ServerLP(QrCode qrcode, Contacts contacts) {
-        super(qrcode.getIpAddress(), 8080);
+    public ServerLP(Contacts contacts) {
+        super(8080);
         this.contacts = contacts;
     }
 
