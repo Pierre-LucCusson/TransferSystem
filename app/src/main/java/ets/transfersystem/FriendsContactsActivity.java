@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 /**
  * Created by Pierre-Luc on 2017-07-06.
  */
@@ -66,6 +68,14 @@ public class FriendsContactsActivity extends AppCompatActivity {
 
     private String getFriendsContactsInJson() {
         //TODO GET contacts with server, return null if no response
-        return "[{\"id\":\"friend3\",\"ip\":\"123456\"},{\"id\":\"friend2\",\"ip\":\"123456\"},{\"id\":\"friend1\",\"ip\":\"123456\"}]";
+        ClientLP client = new ClientLP();
+        try {
+            String response = client.listFriend(friendsIpAdress + ":8080");
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        //return "[{\"id\":\"friend3\",\"ip\":\"123456\"},{\"id\":\"friend2\",\"ip\":\"123456\"},{\"id\":\"friend1\",\"ip\":\"123456\"}]";
     }
 }
