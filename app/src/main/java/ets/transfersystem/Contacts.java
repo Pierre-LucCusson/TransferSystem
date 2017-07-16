@@ -77,4 +77,19 @@ public class Contacts {
         return contacts;
     }
 
+    public void saveContactsWithJson(String contactsInJson) {
+        Gson gson = new Gson();
+        SharedPreferences.Editor editor = settings.edit();
+        contacts = gson.fromJson(contactsInJson, Contact[].class);
+        for (int i = 0; i < contacts.length; i++) {
+            editor.putString(contacts[i].getId(), contacts[i].getId() + ":" + contacts[i].getIp());
+            editor.commit();
+        }
+    }
+
+    public void deleteAllContacts() {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

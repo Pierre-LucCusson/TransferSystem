@@ -25,6 +25,8 @@ public class ContactsActivity extends AppCompatActivity {
         Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
         Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
 
+
+
 //        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
 //        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
 

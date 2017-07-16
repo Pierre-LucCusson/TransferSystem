@@ -116,8 +116,12 @@ public class MainActivity extends AppCompatActivity {
     public void showFriendsContacts(View view) {
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Show My Friends Contacts button was click"));
-        //TODO
-        startActivity(new Intent(MainActivity.this, FriendsContactsActivity.class));
+
+        Intent intent = new Intent(MainActivity.this, FriendsContactsActivity.class);
+        intent.putExtra("EXTRA_CURRENT_FRIEND", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND"));
+        intent.putExtra("EXTRA_CURRENT_FRIEND_ID", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
+        intent.putExtra("EXTRA_CURRENT_FRIEND_IP", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP"));
+        startActivity(intent);
     }
 
     public void deleteThisFriend(View view) {

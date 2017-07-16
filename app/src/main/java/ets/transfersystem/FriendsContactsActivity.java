@@ -18,17 +18,25 @@ import android.widget.Toast;
 public class FriendsContactsActivity extends AppCompatActivity {
 
     private Contacts friendsContacts;
+    private String friendsDeviceId;
+    private String friendsIpAdress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        friendsContacts = new Contacts(getSharedPreferences(getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"), 0));
-        Log.d("Contacts toJson", String.format(friendsContacts.getAllContactsToJson()));
-//
-//        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
-//        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
+        friendsDeviceId = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID");
+        friendsIpAdress = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP");
+
+        friendsContacts = new Contacts(getSharedPreferences(friendsDeviceId, 0));
+
+        String friendsContactsInJson = getFriendsContactsInJson();
+
+        if (friendsContactsInJson != null) {
+            friendsContacts.deleteAllContacts();
+            friendsContacts.saveContactsWithJson(friendsContactsInJson);
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, friendsContacts.getAllContactsToString());
 
@@ -43,15 +51,21 @@ public class FriendsContactsActivity extends AppCompatActivity {
                 String msg = "itemPosition=" + position + " deviceID=" + qrCode.getDeviceId() + " iPaddresse=" + qrCode.getIpAddress();
                 Toast.makeText(FriendsContactsActivity.this, msg, Toast.LENGTH_LONG).show();
 
-                Intent intent = new Intent(FriendsContactsActivity.this, MainActivity.class);
+                //TODO start NFC activity
+
+//                Intent intent = new Intent(FriendsContactsActivity.this, MainActivity.class);
 //                intent.putExtra("EXTRA_CURRENT_FRIEND", qrCode.getDeviceId() + ":" + qrCode.getIpAddress());
 //                intent.putExtra("EXTRA_CURRENT_FRIEND_ID", qrCode.getDeviceId());
 //                intent.putExtra("EXTRA_CURRENT_FRIEND_IP", qrCode.getIpAddress());
-                startActivity(intent);
+//                startActivity(intent);
 
-                //TODO
             }
         });
 
+    }
+
+    private String getFriendsContactsInJson() {
+        //TODO GET contacts with server, return null if no response
+        return "[{\"id\":\"friend3\",\"ip\":\"123456\"},{\"id\":\"friend2\",\"ip\":\"123456\"},{\"id\":\"friend1\",\"ip\":\"123456\"}]";
     }
 }
