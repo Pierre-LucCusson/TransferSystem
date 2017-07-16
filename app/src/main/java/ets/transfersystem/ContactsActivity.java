@@ -22,7 +22,7 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
+        Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
 
 

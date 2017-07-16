@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
 
-        serverLP = new ServerLP(new Contacts(getSharedPreferences("ContactsTest3", 0)));
+        serverLP = new ServerLP(new Contacts(getSharedPreferences(Contacts.contactID, 0)));
 
         try {
             serverLP.start();
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Delete This Friend button was click"));
 
-        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
+        Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         contacts.deleteContact(getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
 
         getIntent().removeExtra("EXTRA_CURRENT_FRIEND");

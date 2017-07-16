@@ -124,7 +124,7 @@ public class QrCameraActivity extends AppCompatActivity {
 
                                 QrCode qrCode = new QrCode(qrCodes.valueAt(0).displayValue);
                                 if (qrCode.isValide) {
-                                    Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
+                                    Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
                                     contacts.saveContact(qrCode.getDeviceId(), qrCode.getIpAddress());
                                     Log.d("Qrcode", qrCode.getDeviceId() + ":" + qrCode.getIpAddress() + " was saved");
                                 }

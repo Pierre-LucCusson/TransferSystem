@@ -18,6 +18,7 @@ public class Contacts {
     private String deviceId;
     private Contact[] contacts;
 
+    public static final String contactID = "ContactsTest3";
     private SharedPreferences settings;
 
     public Contacts(SharedPreferences settings) {
