@@ -22,11 +22,13 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest2", 0));
+        Contacts contacts = new Contacts(getSharedPreferences("ContactsTest3", 0));
         Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
 
-        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
-        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
+
+
+//        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
+//        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contacts.getAllContactsToString());
 

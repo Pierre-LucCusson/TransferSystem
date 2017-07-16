@@ -33,6 +33,10 @@
             android:name="ContactsActivity"
             android:label="@string/contactsActivityName">
         </activity>
+        <activity
+            android:name="FriendsContactsActivity"
+            android:label="@string/friendsContactsActivityName">
+        </activity>
 
         <service android:name=".HttpHandler" />
     </application>
