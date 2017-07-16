@@ -30,7 +30,7 @@ public class HttpHandler extends Service {
     {
         ClientLP client = new ClientLP();
         try {
-            return client.sendLongPolling();
+            return client.checkForFileChange("127.0.0.1:8080");
         } catch (IOException e) {
             e.printStackTrace();
         }

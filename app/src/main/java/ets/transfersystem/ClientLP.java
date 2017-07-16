@@ -16,10 +16,6 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 
 public class ClientLP {
 
-    String url = "http://192.168.2.31:5000";
-
-    public final String WAITING = "/waiting";
-
     OkHttpClient client;
 
     public ClientLP()
@@ -30,8 +26,8 @@ public class ClientLP {
                     .readTimeout(50, TimeUnit.SECONDS).build();
     }
 
-    public String sendLongPolling() throws IOException {
-        Request request = new Request.Builder().url(url+WAITING).build();
+    private String sendLongPolling(String url) throws IOException {
+        Request request = new Request.Builder().url(url).build();
 
         try (Response response = client.newCall(request).execute()){
             if (response.code() == 200)
@@ -40,9 +36,57 @@ public class ClientLP {
             }
             else if (response.code() == 408)
             {
-                return sendLongPolling();
+                return sendLongPolling(url);
             }
             return null;
         }
+    }
+
+
+    private String sendRequest(String url) throws IOException
+    {
+        Request request = new Request.Builder().url(url+HTTPRequests.CHECK_FILE_CHANGE).build();
+
+        try (Response response = client.newCall(request).execute()){
+            if (response.code() == 200)
+            {
+                return response.body().string();
+            }
+            return null;
+        }
+    }
+
+    public String checkForFileChange(String url) throws IOException
+    {
+        return sendLongPolling(url + HTTPRequests.CHECK_FILE_CHANGE);
+    }
+    public String listFriend(String url) throws IOException
+    {
+        return sendRequest(url + HTTPRequests.LIST_FRIENDS);
+    }
+
+    public String getFriend(String url, String id) throws IOException
+    {
+        return sendRequest(url + HTTPRequests.GET_FRIEND + id);
+    }
+
+    public String listFiles(String url) throws IOException
+    {
+        return sendRequest(url  +HTTPRequests.LIST_FILES);
+    }
+
+    public String getFile(String url, String id) throws IOException
+    {
+        return sendRequest(url + HTTPRequests.GET_FILE+ id);
+    }
+
+    public String confirmReceived(String url,String name, String file) throws IOException
+    {
+        return sendRequest(url + HTTPRequests.RECEIVE_FILE + file + "/" + name);
+    }
+
+    public String getPosition(String url) throws IOException
+    {
+        return sendRequest(url + HTTPRequests.POSITION);
     }
 }

@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        serverLP = new ServerLP(5555);
+        serverLP = new ServerLP(new QrCode(this),new Contacts(getSharedPreferences("ContactsTest2", 0)));
+
         try {
             serverLP.start();
         } catch (IOException e) {
