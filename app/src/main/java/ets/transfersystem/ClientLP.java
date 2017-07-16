@@ -1,6 +1,7 @@
 package ets.transfersystem;
 
 import android.location.LocationManager;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ public class ClientLP {
     }
 
     private String sendLongPolling(String url) throws IOException {
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url("http://" + url).build();
 
         try (Response response = client.newCall(request).execute()){
             if (response.code() == 200)
@@ -45,8 +46,8 @@ public class ClientLP {
 
     private String sendRequest(String url) throws IOException
     {
-        Request request = new Request.Builder().url("http://" + url+HTTPRequests.CHECK_FILE_CHANGE).build();
-
+        Request request = new Request.Builder().url("http://" + url).build();
+        Log.d("BONJOUR", request.toString());
         try (Response response = client.newCall(request).execute()){
             if (response.code() == 200)
             {
