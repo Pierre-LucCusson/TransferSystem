@@ -1,15 +1,21 @@
 package ets.transfersystem;
 
-import com.google.common.eventbus.Subscribe;
-import com.google.common.reflect.ClassPath;
-import com.google.zxing.qrcode.encoder.QRCode;
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 
-import java.util.concurrent.BlockingQueue;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.eventbus.Subscribe;
+
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import fi.iki.elonen.NanoHTTPD;
-import okhttp3.Response;
 
 /**
  * Created by Conjure2 on 29/06/2017.
@@ -17,18 +23,37 @@ import okhttp3.Response;
 
 public class ServerLP extends NanoHTTPD {
 
-    LinkedBlockingQueue blockingQueue;
-    int timeout = 20;
-    Contacts contacts;
+    private LinkedBlockingQueue blockingQueue;
+    private int timeout = 20;
+    private Contacts contacts;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location lastLocation;
+    private String deviceID;
 
-    private void init()
-    {
+    private void init(Activity mainActivity) {
         blockingQueue = new LinkedBlockingQueue<Event>();
+        lastLocation = null;
+        deviceID = Settings.Secure.getString(mainActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mainActivity);
+        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(mainActivity, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        lastLocation = location;
+                    }
+                }
+            });
+
+            return;
+        }
     }
 
-    public ServerLP(Contacts contacts) {
+    public ServerLP(Contacts contacts, Activity mainActivity) {
         super(8080);
         this.contacts = contacts;
+        init(mainActivity);
     }
 
     //TODO: eventbus.register(server); somewhere, maybe MainActivity
@@ -73,9 +98,11 @@ public class ServerLP extends NanoHTTPD {
 
         }else if(session.getUri().contains(HTTPRequests.POSITION))
         {
-            String[] params = session.getUri().split("/");
-            //TODO: get Position
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContact(params[params.length-1]));
+            if(lastLocation != null)
+            {
+                return new Response(Response.Status.OK, MIME_PLAINTEXT, String.format("%f/%f/%s", lastLocation.getLongitude(), lastLocation.getLatitude(), deviceID));
+            }
+            return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "POSITION NOT FOUND");
 
         }else if(session.getUri().contains(HTTPRequests.CHECK_FILE_CHANGE))
         {
