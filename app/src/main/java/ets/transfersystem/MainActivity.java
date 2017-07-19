@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
 
-        serverLP = new ServerLP(new Contacts(getSharedPreferences(Contacts.contactID, 0)));
+        serverLP = new ServerLP(new Contacts(getSharedPreferences(Contacts.contactID, 0)), this);
 
         try {
             serverLP.start();
