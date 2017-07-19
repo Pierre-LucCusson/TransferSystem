@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:allowBackup="true"
@@ -36,6 +37,14 @@
         <activity
             android:name="FriendsContactsActivity"
             android:label="@string/friendsContactsActivityName">
+        </activity>
+        <activity
+            android:name="NFCBeamSenderActivity"
+            android:label="NFC Beam Sender">
+        </activity>
+        <activity
+            android:name="NFCBeamReceiverActivity"
+            android:label="NFC Beam Receiver">
         </activity>
 
         <service android:name=".HttpHandler" />

@@ -34,6 +34,7 @@ public class FriendsContactsActivity extends AppCompatActivity {
         friendsContacts = new Contacts(getSharedPreferences(friendsDeviceId, 0));
 
         String friendsContactsInJson = getFriendsContactsInJson();
+        Log.d("friendsContactsInJson", friendsContactsInJson);
 
         if (friendsContactsInJson != null) {
             friendsContacts.deleteAllContacts();
@@ -53,13 +54,16 @@ public class FriendsContactsActivity extends AppCompatActivity {
                 String msg = "itemPosition=" + position + " deviceID=" + qrCode.getDeviceId() + " iPaddresse=" + qrCode.getIpAddress();
                 Toast.makeText(FriendsContactsActivity.this, msg, Toast.LENGTH_LONG).show();
 
-                //TODO start NFC activity
+                //TODO le serveur de l autre meta equipe ne recoit rien, pouquoi ???
+                ClientLP client = new ClientLP();
+                try {
+                    String response = client.getFriend(friendsIpAdress + ":8080", Integer.toString(position));
+                    Intent nfcReceiverIntent = new Intent(FriendsContactsActivity.this, NFCBeamReceiverActivity.class);
+                    startActivity(nfcReceiverIntent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-//                Intent intent = new Intent(FriendsContactsActivity.this, MainActivity.class);
-//                intent.putExtra("EXTRA_CURRENT_FRIEND", qrCode.getDeviceId() + ":" + qrCode.getIpAddress());
-//                intent.putExtra("EXTRA_CURRENT_FRIEND_ID", qrCode.getDeviceId());
-//                intent.putExtra("EXTRA_CURRENT_FRIEND_IP", qrCode.getIpAddress());
-//                startActivity(intent);
 
             }
         });
@@ -67,7 +71,6 @@ public class FriendsContactsActivity extends AppCompatActivity {
     }
 
     private String getFriendsContactsInJson() {
-        //TODO GET contacts with server, return null if no response
         ClientLP client = new ClientLP();
         try {
             String response = client.listFriend(friendsIpAdress + ":8080");

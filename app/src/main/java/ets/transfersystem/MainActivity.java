@@ -77,6 +77,16 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
+        //Show Friends contacts
+        final Button nfcButton = (Button) findViewById(R.id.nfcButton);
+        nfcButton.setOnClickListener( new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                openNfc(view);
+            }
+        } );
+
         //Delete this friend
         final Button deleteFriendButton = (Button) findViewById(R.id.deleteFriendButton);
         deleteFriendButton.setOnClickListener( new View.OnClickListener()
@@ -91,11 +101,13 @@ public class MainActivity extends AppCompatActivity {
         if(myCurrentFriendInfo == null) {
             myCurrentFriend.setText("Please select a contact.");
             friendContactsButton.setVisibility(View.INVISIBLE);
+            nfcButton.setVisibility(View.INVISIBLE);
             deleteFriendButton.setVisibility(View.INVISIBLE);
         }
         else {
             myCurrentFriend.setText(myCurrentFriendInfo);
             friendContactsButton.setVisibility(View.VISIBLE);
+            nfcButton.setVisibility(View.VISIBLE);
             deleteFriendButton.setVisibility(View.VISIBLE);
         }
     }
@@ -127,6 +139,21 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("EXTRA_CURRENT_FRIEND_ID", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
         intent.putExtra("EXTRA_CURRENT_FRIEND_IP", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP"));
         startActivity(intent);
+    }
+
+    public void openNfc(View view) {
+        Button button = (Button) view;
+        Log.d("ButtonClick", String.format("Open NFC button was click"));
+
+        //TODO move to folowing code the proper place when the server receive GET 00.00.00.00:8080/getfriend/2
+        int position = 0; //TODO position = getfriend/position
+        Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
+        String[] myContacts = contacts.getAllContactsToString();
+
+        Intent nfcSenderIntent = new Intent(MainActivity.this, NFCBeamSenderActivity.class);
+        String nfcMessageToSend = position + ":confirm:" + myContacts[position];
+        nfcSenderIntent.putExtra("EXTRA_NFC_MESSAGE_TO_SEND", nfcMessageToSend);
+        startActivity(nfcSenderIntent);
     }
 
     public void deleteThisFriend(View view) {
