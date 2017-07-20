@@ -2,6 +2,7 @@ package ets.transfersystem;
 
 import android.content.Intent;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
+        QrCode qrCode = new QrCode(this);
+
+        //My deviceID
+        final TextView myDeviceIdText = (TextView) findViewById(R.id.myDeviceIdText);
+        myDeviceIdText.setText("My Device ID: " + qrCode.getDeviceId());
+
+        //My IP address
+        final TextView myIpAddressText = (TextView) findViewById(R.id.myIpAddressText);
+        myIpAddressText.setText("My IP Address: " + qrCode.getIpAddress());
+
         String myCurrentFriendInfo = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND");
 
         //My Current Friend
@@ -105,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             deleteFriendButton.setVisibility(View.INVISIBLE);
         }
         else {
-            myCurrentFriend.setText(myCurrentFriendInfo);
+            myCurrentFriend.setText("My Current Friend: " + myCurrentFriendInfo);
             friendContactsButton.setVisibility(View.VISIBLE);
             nfcButton.setVisibility(View.VISIBLE);
             deleteFriendButton.setVisibility(View.VISIBLE);

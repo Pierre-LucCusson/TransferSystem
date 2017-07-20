@@ -7,6 +7,30 @@
     tools:context="ets.transfersystem.MainActivity">
 
     <TextView
+        android:id="@+id/myDeviceIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Device ID:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.117"
+        app:layout_constraintHorizontal_bias="0.501" />
+
+    <TextView
+        android:id="@+id/myIpAddressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My IP Address:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.178"
+        app:layout_constraintHorizontal_bias="0.501" />
+
+    <TextView
         android:id="@+id/myCurrentFriendText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
