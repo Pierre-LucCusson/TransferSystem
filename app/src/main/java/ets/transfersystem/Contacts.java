@@ -17,6 +17,7 @@ public class Contacts {
 
     private String deviceId;
     private Contact[] contacts;
+    private Gson gson = new Gson();
 
     public static final String contactID = "ContactsTest3";
     private SharedPreferences settings;
@@ -27,14 +28,28 @@ public class Contacts {
     }
 
     public Contacts(String json) {
-        Gson gson = new Gson();
         contacts = gson.fromJson(json, Contact[].class);
     }
 
     public void saveContact(String deviceID, String ipAddresse) {
+        Contact contact = new Contact(deviceID, ipAddresse);
+        saveContact(contact);
+//        old code
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putString(deviceID, deviceID + ":" + ipAddresse);
+//        editor.commit();
+    }
+
+    public void saveContact(Contact contact) {
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(deviceID, deviceID + ":" + ipAddresse);
+        editor.putString(contact.getId(), gson.toJson(contact));
         editor.commit();
+    }
+
+    public void saveContact(Contact[] contacts) {
+        for (Contact contact : contacts) {
+            saveContact(contact);
+        }
     }
 
     public String getContact(String deviceID) {
@@ -70,7 +85,6 @@ public class Contacts {
     }
 
     public String getAllContactsToJson() {
-        Gson gson = new Gson();
         return gson.toJson(getAllContacts());
     }
 
@@ -79,7 +93,6 @@ public class Contacts {
     }
 
     public void saveContactsWithJson(String contactsInJson) {
-        Gson gson = new Gson();
         SharedPreferences.Editor editor = settings.edit();
         contacts = gson.fromJson(contactsInJson, Contact[].class);
         for (int i = 0; i < contacts.length; i++) {
