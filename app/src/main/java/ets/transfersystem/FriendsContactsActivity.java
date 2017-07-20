@@ -57,7 +57,7 @@ public class FriendsContactsActivity extends AppCompatActivity {
                 //TODO le serveur de l autre meta equipe ne recoit rien, pouquoi ???
                 ClientLP client = new ClientLP();
                 try {
-                    String response = client.getFriend(friendsIpAdress + ":8080", Integer.toString(position));
+                    String response = client.getFriend(friendsIpAdress + ":8080", qrCode.getDeviceId());
                     Intent nfcReceiverIntent = new Intent(FriendsContactsActivity.this, NFCBeamReceiverActivity.class);
                     startActivity(nfcReceiverIntent);
                 } catch (IOException e) {

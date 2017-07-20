@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         String[] myContacts = contacts.getAllContactsToString();
 
         Intent nfcSenderIntent = new Intent(MainActivity.this, NFCBeamSenderActivity.class);
-        String nfcMessageToSend = position + ":confirm:" + myContacts[position];
+        String nfcMessageToSend = "confirm:" + myContacts[position];
         nfcSenderIntent.putExtra("EXTRA_NFC_MESSAGE_TO_SEND", nfcMessageToSend);
         startActivity(nfcSenderIntent);
     }

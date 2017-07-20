@@ -25,11 +25,6 @@ public class ContactsActivity extends AppCompatActivity {
         Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
 
-
-
-//        Contacts friendsContacts = new Contacts(contacts.getAllContactsToJson());
-//        Log.d("Contacts fromJson", friendsContacts.getAllFriendsContacts()[1].getIp());
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contacts.getAllContactsToString());
 
         ListView list = (ListView) findViewById(R.id.contacts_list);

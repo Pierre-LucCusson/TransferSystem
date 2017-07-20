@@ -2,10 +2,12 @@ package ets.transfersystem;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,6 +25,7 @@ import fi.iki.elonen.NanoHTTPD;
 
 public class ServerLP extends NanoHTTPD {
 
+    private Activity mainActivity;
     private LinkedBlockingQueue blockingQueue;
     private int timeout = 20;
     private Contacts contacts;
@@ -31,6 +34,7 @@ public class ServerLP extends NanoHTTPD {
     private String deviceID;
 
     private void init(Activity mainActivity) {
+        this.mainActivity = mainActivity;
         blockingQueue = new LinkedBlockingQueue<Event>();
         lastLocation = null;
         deviceID = Settings.Secure.getString(mainActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -45,7 +49,6 @@ public class ServerLP extends NanoHTTPD {
                     }
                 }
             });
-
             return;
         }
     }
@@ -76,8 +79,19 @@ public class ServerLP extends NanoHTTPD {
         }
         else if(session.getUri().contains(HTTPRequests.GET_FRIEND))
         {
+            //TODO to be tested
             String[] params = session.getUri().split("/");
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContact(params[params.length-1])) ;
+            String deviceId = params[params.length-1];
+//            String[] myContacts = contacts.getAllContactsToString();
+            String contactIdIp = contacts.getContact(deviceId);
+
+            //Start NFCBeamSenderActivity
+            Intent nfcSenderIntent = new Intent(mainActivity, NFCBeamSenderActivity.class);
+            String nfcMessageToSend = "confirm:" + contactIdIp;
+            nfcSenderIntent.putExtra("EXTRA_NFC_MESSAGE_TO_SEND", nfcMessageToSend);
+            mainActivity.startActivity(nfcSenderIntent);
+
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, contactIdIp) ;
 
         }else if(session.getUri().contains(HTTPRequests.LIST_FILES))
         {

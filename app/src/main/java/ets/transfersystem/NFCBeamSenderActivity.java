@@ -25,7 +25,6 @@ public class NFCBeamSenderActivity extends AppCompatActivity {
 
     private NfcAdapter nfcAdapter;
     private NdefMessage message;
-    private String idIp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -57,7 +57,7 @@ public class NFCBeamReceiverActivity extends AppCompatActivity {
         String action = intent.getAction();
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-        String s = action + "\n\n" + tag.toString();
+        String s = "";
 
         // parse through all NDEF messages and their records and pick text type only
         Parcelable[] data = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -72,9 +72,7 @@ public class NFCBeamReceiverActivity extends AppCompatActivity {
                             String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
                             int langCodeLen = payload[0] & 0077;
 
-                            s += ("\n\nNdefMessage[" + i + "], NdefRecord[" + j + "]:\n\"" +
-                                    new String(payload, langCodeLen + 1, payload.length - langCodeLen - 1,
-                                            textEncoding) + "\"");
+                            s += (new String(payload, langCodeLen + 1, payload.length - langCodeLen - 1, textEncoding));
                         }
                     }
                 }
@@ -83,11 +81,11 @@ public class NFCBeamReceiverActivity extends AppCompatActivity {
             }
         }
 
-        Log.d("messageNFC",s);
+        Log.d("messageNFC", "The NFC message received is: " + s);
         String[] nfcMessageReceived = s.split(":");
-        if (nfcMessageReceived.length == 4) {
+        if (nfcMessageReceived.length == 3) {
             Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
-            contacts.saveContact(nfcMessageReceived[2], nfcMessageReceived[3]);
+            contacts.saveContact(nfcMessageReceived[1], nfcMessageReceived[2]);
             Log.d("messageNFC","The contact was saved");
         }
         else {
