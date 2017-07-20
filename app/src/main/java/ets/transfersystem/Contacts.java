@@ -95,10 +95,12 @@ public class Contacts {
     public void saveContactsWithJson(String contactsInJson) {
         SharedPreferences.Editor editor = settings.edit();
         contacts = gson.fromJson(contactsInJson, Contact[].class);
-        for (int i = 0; i < contacts.length; i++) {
-            editor.putString(contacts[i].getId(), contacts[i].getId() + ":" + contacts[i].getIp());
-            editor.commit();
-        }
+        saveContact(contacts);
+//        old code
+//        for (int i = 0; i < contacts.length; i++) {
+//            editor.putString(contacts[i].getId(), contacts[i].getId() + ":" + contacts[i].getIp());
+//            editor.commit();
+//        }
     }
 
     public void deleteAllContacts() {
