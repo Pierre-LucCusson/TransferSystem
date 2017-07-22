@@ -39,18 +39,18 @@ public class ServerLP extends NanoHTTPD {
         lastLocation = null;
         deviceID = Settings.Secure.getString(mainActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mainActivity);
-        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(mainActivity, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        lastLocation = location;
-                    }
-                }
-            });
-            return;
-        }
+//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mainActivity);
+//        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(mainActivity, new OnSuccessListener<Location>() {
+//                @Override
+//                public void onSuccess(Location location) {
+//                    if (location != null) {
+//                        lastLocation = location;
+//                    }
+//                }
+//            });
+//            return;
+//        }
     }
 
     public ServerLP(Contacts contacts, Activity mainActivity) {
@@ -75,6 +75,7 @@ public class ServerLP extends NanoHTTPD {
 
         if(session.getUri().contains(HTTPRequests.LIST_FRIENDS))
         {
+            Log.d("ServerSend", contacts.getAllContactsToJson());
             return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getAllContactsToJson());
         }
         else if(session.getUri().contains(HTTPRequests.GET_FRIEND))
@@ -82,16 +83,16 @@ public class ServerLP extends NanoHTTPD {
             //TODO to be tested
             String[] params = session.getUri().split("/");
             String deviceId = params[params.length-1];
-//            String[] myContacts = contacts.getAllContactsToString();
-            String contactIdIp = contacts.getContact(deviceId);
+            Log.d("messageNFCserver", deviceId);
+            Contact contact = contacts.getContact(deviceId);
 
             //Start NFCBeamSenderActivity
             Intent nfcSenderIntent = new Intent(mainActivity, NFCBeamSenderActivity.class);
-            String nfcMessageToSend = "confirm:" + contactIdIp;
+            String nfcMessageToSend = "confirm:" + contact.getId() + ":" + contact.getIp();
             nfcSenderIntent.putExtra("EXTRA_NFC_MESSAGE_TO_SEND", nfcMessageToSend);
             mainActivity.startActivity(nfcSenderIntent);
 
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contactIdIp) ;
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, contact.getId() + ":" + contact.getIp()) ;
 
         }else if(session.getUri().contains(HTTPRequests.LIST_FILES))
         {
@@ -102,13 +103,13 @@ public class ServerLP extends NanoHTTPD {
         {
             String[] params = session.getUri().split("/");
             //TODO: Get file
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContact(params[params.length-1]));
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContactInJson(params[params.length-1]));
 
         }else if(session.getUri().contains(HTTPRequests.RECEIVE_FILE))
         {
             String[] params = session.getUri().split("/");
             //TODO: Send notification
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContact(params[params.length-1]));
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContactInJson(params[params.length-1]));
 
         }else if(session.getUri().contains(HTTPRequests.POSITION))
         {

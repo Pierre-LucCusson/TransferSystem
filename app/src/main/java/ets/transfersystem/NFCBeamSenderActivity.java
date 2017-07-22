@@ -40,10 +40,6 @@ public class NFCBeamSenderActivity extends AppCompatActivity {
         message = new NdefMessage(
                 new NdefRecord[] {
                         createNewTextRecord(nfcMessageToSend, Locale.ENGLISH, true) });
-
-        returnToMainActivity();
-
-
     }
 
     public static NdefRecord createNewTextRecord(String text, Locale locale, boolean encodeInUtf8) {
@@ -78,10 +74,4 @@ public class NFCBeamSenderActivity extends AppCompatActivity {
         if (nfcAdapter != null)
             nfcAdapter.disableForegroundNdefPush(this);
     }
-
-    private void returnToMainActivity() {
-        //TODO
-        Log.d("messageNFC", "return to main activity ?");
-    }
-
 }

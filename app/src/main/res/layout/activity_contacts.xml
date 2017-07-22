@@ -12,6 +12,40 @@ android:orientation="vertical">
 <!--android:text="@string/backButton"-->
 <!--android:onClick="back"/>-->
 
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/distanceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Distance"
+            android:onClick="orderByDistance"/>
+
+        <Button
+            android:id="@+id/nameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Name"
+            android:onClick="orderByName"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/lastLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Last Login"
+            android:onClick="orderByLastLogin"/>
+
+    </LinearLayout>
+
 <ListView
     android:id="@+id/contacts_list"
     android:layout_width="match_parent"

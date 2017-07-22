@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 /**
@@ -41,6 +43,9 @@ public class FriendsContactsActivity extends AppCompatActivity {
             friendsContacts.saveContactsWithJson(friendsContactsInJson);
         }
 
+        OrderContacts orderContacts = new OrderContacts(this, FriendsContactsActivity.this, FriendsContactsActivity.class, friendsContacts.getAllContacts(), getIntent().getStringExtra("EXTRA_ORDER_BY"));
+        orderContacts.setOrderButtons();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, friendsContacts.getAllContactsToString());
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
@@ -50,14 +55,14 @@ public class FriendsContactsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
                 TextView textView = (TextView) viewClicked;
-                QrCode qrCode = new QrCode(textView.getText().toString());
-                String msg = "itemPosition=" + position + " deviceID=" + qrCode.getDeviceId() + " iPaddresse=" + qrCode.getIpAddress();
+                Contact contact = new Gson().fromJson(textView.getText().toString(), Contact.class);
+                String msg = "itemPosition=" + position + " deviceID=" + contact.getId() + " iPaddresse=" + contact.getIp();
                 Toast.makeText(FriendsContactsActivity.this, msg, Toast.LENGTH_LONG).show();
 
-                //TODO le serveur de l autre meta equipe ne recoit rien, pouquoi ???
                 ClientLP client = new ClientLP();
                 try {
-                    String response = client.getFriend(friendsIpAdress + ":8080", qrCode.getDeviceId());
+                    Log.d("messageNFC clientID", contact.getId());
+                    String response = client.getFriend(friendsIpAdress + ":8080", contact.getId());
                     Intent nfcReceiverIntent = new Intent(FriendsContactsActivity.this, NFCBeamReceiverActivity.class);
                     startActivity(nfcReceiverIntent);
                 } catch (IOException e) {

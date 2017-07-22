@@ -51,7 +51,9 @@ public class ClientLP {
         try (Response response = client.newCall(request).execute()){
             if (response.code() == 200)
             {
-                return response.body().string();
+                String bodyRequest = response.body().string();
+                Log.d("ClientReceived", bodyRequest);
+                return bodyRequest;
             }
             return null;
         }
@@ -63,6 +65,7 @@ public class ClientLP {
     }
     public String listFriend(String url) throws IOException
     {
+        Log.d("listFriend url= ",url);
         return sendRequest(url + HTTPRequests.LIST_FRIENDS);
     }
 

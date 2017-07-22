@@ -71,6 +71,9 @@ public class QrCameraActivity extends AppCompatActivity {
             }
         } );
 
+        Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
+        contacts.saveContact("TabDevice", "0.1.2.3");
+
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         txtResult = (TextView) findViewById(R.id.txtResult);
 

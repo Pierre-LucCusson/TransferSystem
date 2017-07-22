@@ -12,6 +12,11 @@ public class Contact {
     private double distance;
     private long lastLogin;
 
+    public Contact(String information) {
+        String[] info = information.split(":");
+        this.id = info[0];
+        this.ip = info[1];
+    }
 
     public Contact(String id, String ip) {
         this.id = id;
@@ -27,12 +32,6 @@ public class Contact {
         this.online = false;
         this.distance = distance;
         this.lastLogin = lastLogin;
-    }
-
-    public Contact(String information) {
-        String[] info = information.split(":");
-        this.id = info[0];
-        this.ip = info[1];
     }
 
     public String getIp() {

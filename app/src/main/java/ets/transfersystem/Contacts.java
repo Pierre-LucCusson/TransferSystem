@@ -52,7 +52,10 @@ public class Contacts {
         }
     }
 
-    public String getContact(String deviceID) {
+    public Contact getContact(String deviceID) {
+        return new Gson().fromJson(getContactInJson(deviceID), Contact.class);
+    }
+    public String getContactInJson(String deviceID) {
         return settings.getString(deviceID, "");
     }
 
@@ -73,7 +76,7 @@ public class Contacts {
         String[] stringMapsContacts = mapsContacts.values().toArray(new String[0]);
         contacts = new Contact[stringMapsContacts.length];
         for (int i = 0; i < stringMapsContacts.length; i++) {
-            contacts[i] = new Contact(stringMapsContacts[i]);
+            contacts[i] = new Gson().fromJson(stringMapsContacts[i], Contact.class);
         }
         return contacts;
     }
