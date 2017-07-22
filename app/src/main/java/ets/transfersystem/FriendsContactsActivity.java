@@ -36,9 +36,9 @@ public class FriendsContactsActivity extends AppCompatActivity {
         friendsContacts = new Contacts(getSharedPreferences(friendsDeviceId, 0));
 
         String friendsContactsInJson = getFriendsContactsInJson();
-        Log.d("friendsContactsInJson", friendsContactsInJson);
 
         if (friendsContactsInJson != null) {
+            Log.d("friendsContactsInJson", friendsContactsInJson);
             friendsContacts.deleteAllContacts();
             friendsContacts.saveContactsWithJson(friendsContactsInJson);
         }
