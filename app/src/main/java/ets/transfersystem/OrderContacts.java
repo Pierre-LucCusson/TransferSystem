@@ -99,7 +99,7 @@ public class OrderContacts implements Comparable<Contact> {
                 Arrays.sort(contacts, new Comparator<Contact>() {
                     @Override
                     public int compare(Contact c1, Contact c2) {
-                        return Double.toString(c1.getDistance()).compareTo(Double.toString(c2.getDistance()));
+                        return Double.valueOf(c1.getDistance()).compareTo(Double.valueOf(c2.getDistance()));
                     }
                 });
             } else if (orderBy.equals("name")) {
@@ -113,7 +113,7 @@ public class OrderContacts implements Comparable<Contact> {
                 Arrays.sort(contacts, new Comparator<Contact>() {
                     @Override
                     public int compare(Contact c1, Contact c2) {
-                        return Long.toString(c1.getLastLogin()).compareTo(Long.toString(c2.getLastLogin()));
+                        return Long.valueOf(c1.getLastLogin()).compareTo(Long.valueOf(c2.getLastLogin()));
                     }
                 });
             }
@@ -128,7 +128,6 @@ public class OrderContacts implements Comparable<Contact> {
 
     @Override
     public int compareTo(Contact compareContact) {
-        String compareId = ((Contact) compareContact).getId();
-        return toString().compareTo(compareContact.toString());
+        return compareTo(compareContact);
     }
 }
