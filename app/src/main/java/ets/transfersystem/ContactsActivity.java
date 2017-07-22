@@ -27,10 +27,11 @@ public class ContactsActivity extends AppCompatActivity {
         Contacts contacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         Log.d("Contacts toJson", String.format(contacts.getAllContactsToJson()));
 
-        OrderContacts orderContacts = new OrderContacts(this, ContactsActivity.this, ContactsActivity.class,contacts.getAllContacts(), getIntent().getStringExtra("EXTRA_ORDER_BY"));
+        OrderContacts orderContacts = new OrderContacts(this, ContactsActivity.this, ContactsActivity.class,contacts.getAllContacts());
         orderContacts.setOrderButtons();
+        String[] contactsInJson = orderContacts.getContactsByOrderInJson();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contacts.getAllContactsToString());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contactsInJson);
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);

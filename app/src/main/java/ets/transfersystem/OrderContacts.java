@@ -3,15 +3,21 @@ package ets.transfersystem;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Created by Pierre-Luc on 2017-07-20.
  */
 
-public class OrderContacts {
+public class OrderContacts implements Comparable<Contact> {
 
     private Activity activity;
     private Context packageContext;
@@ -19,13 +25,13 @@ public class OrderContacts {
     private Contact[] contacts;
     private String orderBy;
 
-    public OrderContacts(Activity activity, Context packageContext, Class<?> className, Contact[] contacts, String orderBy) {
-        Log.d("ButtonClick", "ORDER BY " + orderBy);
+    public OrderContacts(Activity activity, Context packageContext, Class<?> className, Contact[] contacts) {
         this.activity = activity;
         this.packageContext = packageContext;
         this.className = className;
         this.contacts = contacts;
-        this.orderBy = orderBy;
+        orderBy = activity.getIntent().getStringExtra("EXTRA_ORDER_BY");
+        Log.d("ButtonClick", "ORDER BY " + orderBy);
     }
 
     public void setOrderButtons() {
@@ -84,5 +90,45 @@ public class OrderContacts {
         intent.putExtra("EXTRA_CURRENT_FRIEND_ID", activity.getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
         intent.putExtra("EXTRA_CURRENT_FRIEND_IP", activity.getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP"));
         activity.startActivity(intent);
+    }
+
+    public String[] getContactsByOrderInJson() {
+
+        if (orderBy != null) {
+            if (orderBy.equals("distance")) {
+                Arrays.sort(contacts, new Comparator<Contact>() {
+                    @Override
+                    public int compare(Contact c1, Contact c2) {
+                        return Double.toString(c1.getDistance()).compareTo(Double.toString(c2.getDistance()));
+                    }
+                });
+            } else if (orderBy.equals("name")) {
+                Arrays.sort(contacts, new Comparator<Contact>() {
+                    @Override
+                    public int compare(Contact c1, Contact c2) {
+                        return c1.getId().compareTo(c2.getId());
+                    }
+                });
+            } else if (orderBy.equals("lastlogin")) {
+                Arrays.sort(contacts, new Comparator<Contact>() {
+                    @Override
+                    public int compare(Contact c1, Contact c2) {
+                        return Long.toString(c1.getLastLogin()).compareTo(Long.toString(c2.getLastLogin()));
+                    }
+                });
+            }
+        }
+
+        String[] contactsInJson = new String[contacts.length];
+        for (int i = 0; i < contacts.length; i++) {
+            contactsInJson[i] = new Gson().toJson(contacts[i]);
+        }
+        return contactsInJson;
+    }
+
+    @Override
+    public int compareTo(Contact compareContact) {
+        String compareId = ((Contact) compareContact).getId();
+        return toString().compareTo(compareContact.toString());
     }
 }

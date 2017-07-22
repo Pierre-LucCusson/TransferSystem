@@ -4,7 +4,7 @@ package ets.transfersystem;
  * Created by Pierre-Luc on 2017-07-06.
  */
 
-public class Contact {
+public class Contact  {
 
     private String ip;
     private String id;

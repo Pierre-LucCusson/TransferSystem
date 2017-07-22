@@ -43,10 +43,11 @@ public class FriendsContactsActivity extends AppCompatActivity {
             friendsContacts.saveContactsWithJson(friendsContactsInJson);
         }
 
-        OrderContacts orderContacts = new OrderContacts(this, FriendsContactsActivity.this, FriendsContactsActivity.class, friendsContacts.getAllContacts(), getIntent().getStringExtra("EXTRA_ORDER_BY"));
+        OrderContacts orderContacts = new OrderContacts(this, FriendsContactsActivity.this, FriendsContactsActivity.class, friendsContacts.getAllContacts());
         orderContacts.setOrderButtons();
+        String[] contactsInJson = orderContacts.getContactsByOrderInJson();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, friendsContacts.getAllContactsToString());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contactsInJson);
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
@@ -84,6 +85,5 @@ public class FriendsContactsActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
-        //return "[{\"id\":\"friend3\",\"ip\":\"123456\"},{\"id\":\"friend2\",\"ip\":\"123456\"},{\"id\":\"friend1\",\"ip\":\"123456\"}]";
     }
 }
