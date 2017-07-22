@@ -99,16 +99,31 @@ public class Contacts {
         SharedPreferences.Editor editor = settings.edit();
         contacts = gson.fromJson(contactsInJson, Contact[].class);
         saveContact(contacts);
-//        old code
-//        for (int i = 0; i < contacts.length; i++) {
-//            editor.putString(contacts[i].getId(), contacts[i].getId() + ":" + contacts[i].getIp());
-//            editor.commit();
-//        }
     }
 
     public void deleteAllContacts() {
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
         editor.commit();
+    }
+
+    public void setToOnlineAndSave(String deviceId) {
+        Contact contact = getContact(deviceId);
+        setToOnlineAndSave(contact);
+    }
+
+    public void setToOnlineAndSave(Contact contact) {
+        contact.setOnline(true);
+        saveContact(contact);
+    }
+
+    public void setToOfflineAndSave(String deviceId) {
+        Contact contact = getContact(deviceId);
+        setToOfflineAndSave(contact);
+    }
+
+    public void setToOfflineAndSave(Contact contact) {
+        contact.setOnline(false);
+        saveContact(contact);
     }
 }
