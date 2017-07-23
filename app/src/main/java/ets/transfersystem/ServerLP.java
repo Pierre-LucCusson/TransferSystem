@@ -73,6 +73,11 @@ public class ServerLP extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
 
+        Contact contactFromClient = contacts.getContactByIpAddress(session.getHeaders().get("remote-addr"));
+        if (contactFromClient != null) {
+            contacts.setToOnlineAndSave(contactFromClient);
+        }
+
         if(session.getUri().contains(HTTPRequests.LIST_FRIENDS))
         {
             Log.d("ServerSend", contacts.getAllContactsToJson());
@@ -80,7 +85,6 @@ public class ServerLP extends NanoHTTPD {
         }
         else if(session.getUri().contains(HTTPRequests.GET_FRIEND))
         {
-            //TODO to be tested
             String[] params = session.getUri().split("/");
             String deviceId = params[params.length-1];
             Log.d("messageNFCserver", deviceId);

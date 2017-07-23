@@ -22,6 +22,7 @@ import java.io.IOException;
 public class FriendsContactsActivity extends AppCompatActivity {
 
     private Contacts friendsContacts;
+    private Contacts myContacts;
     private String friendsDeviceId;
     private String friendsIpAdress;
 
@@ -33,19 +34,15 @@ public class FriendsContactsActivity extends AppCompatActivity {
         friendsDeviceId = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID");
         friendsIpAdress = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP");
 
+        myContacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         friendsContacts = new Contacts(getSharedPreferences(friendsDeviceId, 0));
 
         String friendsContactsInJson = getFriendsContactsInJson();
 
-        Contacts myContacts = new Contacts(getSharedPreferences(Contacts.contactID, 0));
         if (friendsContactsInJson != null) {
             Log.d("friendsContactsInJson", friendsContactsInJson);
             friendsContacts.deleteAllContacts();
             friendsContacts.saveContactsWithJson(friendsContactsInJson);
-            myContacts.setToOnlineAndSave(friendsDeviceId);
-        }
-        else {
-            myContacts.setToOfflineAndSave(friendsDeviceId);
         }
 
         OrderContacts orderContacts = new OrderContacts(this, FriendsContactsActivity.this, FriendsContactsActivity.class, friendsContacts.getAllContacts());
@@ -69,9 +66,11 @@ public class FriendsContactsActivity extends AppCompatActivity {
                 try {
                     Log.d("messageNFC clientID", contact.getId());
                     String response = client.getFriend(friendsIpAdress + ":8080", contact.getId());
+                    myContacts.setToOnlineAndSave(friendsDeviceId);
                     Intent nfcReceiverIntent = new Intent(FriendsContactsActivity.this, NFCBeamReceiverActivity.class);
                     startActivity(nfcReceiverIntent);
                 } catch (IOException e) {
+                    myContacts.setToOfflineAndSave(friendsDeviceId);
                     e.printStackTrace();
                 }
 
@@ -85,8 +84,10 @@ public class FriendsContactsActivity extends AppCompatActivity {
         ClientLP client = new ClientLP();
         try {
             String response = client.listFriend(friendsIpAdress + ":8080");
+            myContacts.setToOnlineAndSave(friendsDeviceId);
             return response;
         } catch (IOException e) {
+            myContacts.setToOfflineAndSave(friendsDeviceId);
             e.printStackTrace();
             return null;
         }

@@ -114,6 +114,7 @@ public class Contacts {
 
     public void setToOnlineAndSave(Contact contact) {
         contact.setOnline(true);
+        contact.setLastLogin(System.currentTimeMillis());
         saveContact(contact);
     }
 
@@ -125,5 +126,15 @@ public class Contacts {
     public void setToOfflineAndSave(Contact contact) {
         contact.setOnline(false);
         saveContact(contact);
+    }
+
+    public Contact getContactByIpAddress(String ipAddress) {
+        Contact[] myContacts = getAllContacts();
+        for (Contact contact: myContacts) {
+            if (contact.getIp().equals(ipAddress)) {
+                return  contact;
+            }
+        }
+        return null;
     }
 }
