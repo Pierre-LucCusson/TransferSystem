@@ -13,6 +13,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -29,13 +31,14 @@ public class ServerLP extends NanoHTTPD {
     private LinkedBlockingQueue blockingQueue;
     private int timeout = 20;
     private Contacts contacts;
+    private FolderObserver fo;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastLocation;
     private String deviceID;
 
     private void init(Activity mainActivity) {
         this.mainActivity = mainActivity;
-        blockingQueue = new LinkedBlockingQueue<Event>();
+        blockingQueue = new LinkedBlockingQueue<>();
         lastLocation = null;
         deviceID = Settings.Secure.getString(mainActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -53,15 +56,16 @@ public class ServerLP extends NanoHTTPD {
 //        }
     }
 
-    public ServerLP(Contacts contacts, Activity mainActivity) {
+    public ServerLP(Contacts contacts, Activity mainActivity, FolderObserver fo) {
         super(8080);
         this.contacts = contacts;
+        this.fo = fo;
+        fo.subscribe(this);
         init(mainActivity);
     }
 
-    //TODO: eventbus.register(server); somewhere, maybe MainActivity
     @Subscribe
-    public void handleEvent(Event event)
+    public void handleEvent(NotificationEvent event)
     {
         try {
             blockingQueue.put(event);
@@ -81,7 +85,7 @@ public class ServerLP extends NanoHTTPD {
         if(session.getUri().contains(HTTPRequests.LIST_FRIENDS))
         {
             Log.d("ServerSend", contacts.getAllContactsToJson());
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getAllContactsToJson());
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, FolderObserver.listFiles());
         }
         else if(session.getUri().contains(HTTPRequests.GET_FRIEND))
         {
@@ -101,7 +105,7 @@ public class ServerLP extends NanoHTTPD {
         }else if(session.getUri().contains(HTTPRequests.LIST_FILES))
         {
             //TODO: List files
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getAllContactsToJson());
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, fo.listFiles());
 
         }else if(session.getUri().contains(HTTPRequests.GET_FILE))
         {
@@ -125,16 +129,16 @@ public class ServerLP extends NanoHTTPD {
 
         }else if(session.getUri().contains(HTTPRequests.CHECK_FILE_CHANGE))
         {
-            Event event = null;
+            NotificationEvent event = null;
             try {
-                event = (Event) blockingQueue.poll(timeout, TimeUnit.SECONDS);
+                event = (NotificationEvent) blockingQueue.poll(timeout, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             if (event != null)
             {
-                return new Response(Response.Status.OK, MIME_PLAINTEXT, event.transferString);
+                return new Response(Response.Status.OK, MIME_PLAINTEXT, new Gson().toJson(event));
             }
             else
             {

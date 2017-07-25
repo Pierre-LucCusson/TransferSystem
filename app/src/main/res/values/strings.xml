@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Transfer System</string>
 
+    <string name="permission_rationale">Permissions are needed to get the GPS location</string>
+
+    <string name="showMyFilesButton">My Files</string>
     <string name="showMyQrButton">My QR</string>
     <string name="cameraQrButton">QR Camera</string>
     <string name="showContactsButton">Contacts</string>

@@ -1,6 +1,8 @@
 package ets.transfersystem;
 
 import android.content.Intent;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +12,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
 
     ServerLP serverLP;
+    FolderObserver fo;
+
+    private void initFiles()
+    {
+        fo = new FolderObserver();
+        serverLP = new ServerLP(new Contacts(getSharedPreferences(Contacts.contactID, 0)), this, fo);
+
+        fo.startWatching();
+
+        try {
+            serverLP.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +43,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
 
-        serverLP = new ServerLP(new Contacts(getSharedPreferences(Contacts.contactID, 0)), this);
-
-        try {
-            serverLP.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initFiles();
 
         //Show My QR button
         final Button myQrButton = (Button) findViewById(R.id.myQrButton);
@@ -77,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
 
         //My Current Friend
         final TextView myCurrentFriend = (TextView) findViewById(R.id.myCurrentFriendText);
+
+        //Show files
+        final Button filesButton = (Button) findViewById(R.id.fileButton);
+        filesButton.setOnClickListener( new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                showMyFiles(view);
+            }
+        } );
 
         //Show Friends contacts
         final Button friendContactsButton = (Button) findViewById(R.id.myCurrentFriendContactsButton);
@@ -139,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Show My Contacts button was click"));
         startActivity(new Intent(MainActivity.this, ContactsActivity.class));
+    }
+
+    public void showMyFiles(View view) {
+        Button button = (Button) view;
+        Log.d("ButtonClick", String.format("Show My Files button was click"));
+        startActivity(new Intent(MainActivity.this, FileActivity.class));
     }
 
     public void showFriendsContacts(View view) {

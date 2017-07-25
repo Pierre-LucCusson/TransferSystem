@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:context="ets.transfersystem.MainActivity">
+    tools:context="ets.transfersystem.MainActivity" >
 
     <TextView
         android:id="@+id/myDeviceIdText"
@@ -15,8 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.117"
-        app:layout_constraintHorizontal_bias="0.501" />
+        app:layout_constraintVertical_bias="0.198" />
 
     <TextView
         android:id="@+id/myIpAddressText"
@@ -27,7 +26,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.178"
+        app:layout_constraintVertical_bias="0.259"
         app:layout_constraintHorizontal_bias="0.501" />
 
     <TextView
@@ -114,7 +113,35 @@
             android:text="@string/showContactsButton"
             android:onClick="showContacts"/>
 
+
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/buttonLayout2"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="45dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ></RelativeLayout>
+        <Button
+            android:id="@+id/fileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showFiles"
+            android:text="@string/showMyFilesButton"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ></RelativeLayout>
+    </LinearLayout>
+
 
 
 </android.support.constraint.ConstraintLayout>
