@@ -4,6 +4,7 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -58,6 +59,20 @@ public class ClientLP {
         }
     }
 
+    private InputStream sendFileRequest(String url) throws IOException
+    {
+        Request request = new Request.Builder().url("http://" + url).build();
+        Log.d("BONJOUR", request.toString());
+        try (Response response = client.newCall(request).execute()){
+            if (response.code() == 200)
+            {
+                InputStream bodyRequest = response.body().byteStream();
+                return bodyRequest;
+            }
+            return null;
+        }
+    }
+
     public String checkForFileChange(String url) throws IOException
     {
         return sendLongPolling(url + HTTPRequests.CHECK_FILE_CHANGE);
@@ -78,9 +93,9 @@ public class ClientLP {
         return sendRequest(url  +HTTPRequests.LIST_FILES);
     }
 
-    public String getFile(String url, String id) throws IOException
+    public InputStream getFile(String url, String id) throws IOException
     {
-        return sendRequest(url + HTTPRequests.GET_FILE+ id);
+        return sendFileRequest(url + HTTPRequests.GET_FILE + id);
     }
 
     public String confirmReceived(String url,String name, String file) throws IOException

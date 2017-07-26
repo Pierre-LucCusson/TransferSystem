@@ -68,6 +68,17 @@ public class FolderObserver extends FileObserver {
 
     }
 
+    public static File getFile(String encoded_name)
+    {
+        try {
+            String name = new String(Base64.decode(encoded_name, Base64.URL_SAFE), "UTF-8");
+            return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),name);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void onEvent(int i, String s) {
         if (i == CREATE)

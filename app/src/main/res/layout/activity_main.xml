@@ -6,141 +6,141 @@
     android:layout_height="match_parent"
     tools:context="ets.transfersystem.MainActivity" >
 
-    <TextView
-        android:id="@+id/myDeviceIdText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Device ID:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.198" />
-
-    <TextView
-        android:id="@+id/myIpAddressText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My IP Address:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.259"
-        app:layout_constraintHorizontal_bias="0.501" />
-
-    <TextView
-        android:id="@+id/myCurrentFriendText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Please select a contact"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.315" />
-
-    <Button
-        android:id="@+id/myCurrentFriendContactsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends contacts"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintVertical_bias="0.41"
-        android:onClick="showFriendsContacts" />
-
-    <Button
-        android:id="@+id/deleteFriendButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete This Friend"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintVertical_bias="0.548"
-        android:onClick="deleteThisFriend" />
-
-    <Button
-        android:id="@+id/nfcButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NFC"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.708"
-        android:onClick="openNfc" />
-
-
     <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="368dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp">
-
-        <Button
-            android:id="@+id/myQrButton"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/buttonLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/showMyQrButton"
-            android:onClick="showMyQr"/>
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/cameraQrButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cameraQrButton"
-            android:onClick="openQrCamera"
-            android:visibility="visible"/>
+            <Button
+                android:id="@+id/myQrButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/showMyQrButton"
+                android:onClick="showMyQr"/>
 
-        <Button
-            android:id="@+id/contactsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/showContactsButton"
-            android:onClick="showContacts"/>
+            <Button
+                android:id="@+id/cameraQrButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/cameraQrButton"
+                android:onClick="openQrCamera"
+                android:visibility="visible"/>
 
+            <Button
+                android:id="@+id/contactsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/showContactsButton"
+                android:onClick="showContacts"/>
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/buttonLayout2"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="45dp"
-        tools:layout_editor_absoluteX="0dp">
+            <Button
+                android:id="@+id/fileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="showFiles"
+                android:text="@string/showMyFilesButton"/>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            ></RelativeLayout>
-        <Button
-            android:id="@+id/fileButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="showFiles"
-            android:text="@string/showMyFilesButton"/>
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            ></RelativeLayout>
+            android:layout_gravity="center"
+            android:padding="40dp"
+            >
+
+            <TextView
+                android:id="@+id/myDeviceIdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="My Device ID:" />
+
+            <TextView
+                android:id="@+id/myIpAddressText"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:text="My IP Address:"
+                android:layout_below="@+id/myDeviceIdText"/>
+
+            <TextView
+                android:id="@+id/myCurrentFriendText"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:text="Please select a contact"
+                android:layout_below="@+id/myIpAddressText"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myCurrentFriendText"
+                android:layout_centerHorizontal="true">
+                <TextView
+                    android:id="@+id/LattitudeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lattitude"/>
+
+                <TextView
+                    android:id="@+id/LongitudeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Longitude"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/myCurrentFriendContactsButton"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:text="Friends contacts"
+                android:onClick="showFriendsContacts"
+                android:layout_above="@+id/nfcButton"/>
+
+            <Button
+                android:id="@+id/friendfilesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friend Files"
+                android:layout_centerHorizontal="true"
+                android:onClick="openFriendFiles"
+                android:layout_above="@+id/deleteFriendButton"/>
+
+            <Button
+                android:id="@+id/nfcButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NFC"
+                android:layout_centerHorizontal="true"
+                android:onClick="openNfc"
+                android:layout_above="@+id/friendfilesButton"/>
+
+            <Button
+                android:id="@+id/deleteFriendButton"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:text="Delete This Friend"
+                android:onClick="deleteThisFriend"
+                android:background="@color/danger"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
+
+
 
 
 

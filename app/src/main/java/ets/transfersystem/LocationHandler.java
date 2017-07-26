@@ -1,6 +1,12 @@
 package ets.transfersystem;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * Created by gab on 20/07/17.
@@ -9,10 +15,10 @@ import android.location.Location;
 public class LocationHandler {
 
     private Location location;
-    private static LocationHandler instance;
 
-    private LocationHandler()
+    public LocationHandler(Activity activity)
     {
+
         location = null;
     }
 
@@ -25,8 +31,4 @@ public class LocationHandler {
         this.location = location;
     }
 
-    public static LocationHandler getInstance()
-    {
-        return instance == null ? instance = new LocationHandler() : instance;
-    }
 }

@@ -28,24 +28,27 @@
         </activity>
         <activity
             android:name=".MyQrActivity"
-            android:label="@string/myQrActivityName"></activity>
+            android:label="@string/myQrActivityName" />
         <activity
             android:name=".QrCameraActivity"
-            android:label="@string/qrCameraActivityName"></activity>
+            android:label="@string/qrCameraActivityName" />
         <activity
             android:name=".ContactsActivity"
-            android:label="@string/contactsActivityName"></activity>
+            android:label="@string/contactsActivityName" />
         <activity
             android:name=".FriendsContactsActivity"
-            android:label="@string/friendsContactsActivityName"></activity>
+            android:label="@string/friendsContactsActivityName" />
         <activity
             android:name=".NFCBeamSenderActivity"
-            android:label="NFC Beam Sender"></activity>
+            android:label="NFC Beam Sender" />
         <activity
             android:name=".NFCBeamReceiverActivity"
-            android:label="NFC Beam Receiver"></activity>
-        <activity android:name=".FileActivity"
-            android:label="My Files"></activity>
+            android:label="NFC Beam Receiver" />
+        <activity
+            android:name=".FileActivity"
+            android:label="My Files" />
+        <activity android:name=".FriendFilesActivity" />
+        <activity android:name=".FriendFileActivity"></activity>
     </application>
 
 </manifest>

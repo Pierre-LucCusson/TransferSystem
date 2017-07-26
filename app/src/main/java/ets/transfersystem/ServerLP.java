@@ -2,12 +2,18 @@ package ets.transfersystem;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -16,6 +22,9 @@ import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -41,19 +50,7 @@ public class ServerLP extends NanoHTTPD {
         blockingQueue = new LinkedBlockingQueue<>();
         lastLocation = null;
         deviceID = Settings.Secure.getString(mainActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mainActivity);
-//        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(mainActivity, new OnSuccessListener<Location>() {
-//                @Override
-//                public void onSuccess(Location location) {
-//                    if (location != null) {
-//                        lastLocation = location;
-//                    }
-//                }
-//            });
-//            return;
-//        }
+        lastLocation = null;
     }
 
     public ServerLP(Contacts contacts, Activity mainActivity, FolderObserver fo) {
@@ -111,13 +108,35 @@ public class ServerLP extends NanoHTTPD {
         {
             String[] params = session.getUri().split("/");
             //TODO: Get file
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContactInJson(params[params.length-1]));
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(FolderObserver.getFile(params[params.length-1]));
+                return new Response(Response.Status.OK, MIME_PLAINTEXT, fileInputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
         }else if(session.getUri().contains(HTTPRequests.RECEIVE_FILE))
         {
             String[] params = session.getUri().split("/");
             //TODO: Send notification
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getContactInJson(params[params.length-1]));
+            try {
+                String filename = new String(Base64.decode(params[params.length-2].getBytes(), Base64.URL_SAFE), "UTF-8");
+                Toast.makeText(mainActivity, String.format("%s was transfered to %s", filename, params[params.length-1] ), Toast.LENGTH_LONG).show();
+
+            /*Notification notif = new Notification.Builder(mainActivity.getApplicationContext())
+                    .setContentTitle("Transfer System: Transfer Complete")
+                    .setContentText(String.format("%s was transfered to %s", filename, params[params.length-1] ))
+                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_light)
+                    .build();
+            NotificationManager mNotificationManager = (NotificationManager) mainActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            mNotificationManager.notify(0, notif);
+            */
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, "Notified");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
         }else if(session.getUri().contains(HTTPRequests.POSITION))
         {
@@ -149,6 +168,12 @@ public class ServerLP extends NanoHTTPD {
         return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "NOT FOUND");
 
     }
+
+    public void setLastLocation(Location location)
+    {
+        lastLocation = location;
+    }
+
     public static final Response.IStatus REQUEST_TIMEOUT = new Response.IStatus() {
         @Override
         public int getRequestStatus() {
