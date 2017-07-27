@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.FileObserver;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -122,7 +123,7 @@ public class ServerLP extends NanoHTTPD {
             //TODO: Send notification
             try {
                 String filename = new String(Base64.decode(params[params.length-2].getBytes(), Base64.URL_SAFE), "UTF-8");
-                Toast.makeText(mainActivity, String.format("%s was transfered to %s", filename, params[params.length-1] ), Toast.LENGTH_LONG).show();
+                Toast.makeText(mainActivity.getApplicationContext(), String.format("%s was transfered to %s", FolderObserver.getFile(params[params.length-2]), params[params.length-1] ), Toast.LENGTH_LONG).show();
 
             /*Notification notif = new Notification.Builder(mainActivity.getApplicationContext())
                     .setContentTitle("Transfer System: Transfer Complete")
@@ -142,7 +143,7 @@ public class ServerLP extends NanoHTTPD {
         {
             if(lastLocation != null)
             {
-                return new Response(Response.Status.OK, MIME_PLAINTEXT, String.format("%f/%f/%s", lastLocation.getLongitude(), lastLocation.getLatitude(), deviceID));
+                return new Response(Response.Status.OK, MIME_PLAINTEXT, lastLocation.getLongitude() +"/"+ lastLocation.getLatitude() +"/"+  deviceID);
             }
             return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "POSITION NOT FOUND");
 

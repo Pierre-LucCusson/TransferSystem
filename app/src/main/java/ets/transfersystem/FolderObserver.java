@@ -30,8 +30,8 @@ public class FolderObserver extends FileObserver {
 
     public static String listFiles()
     {
-        String[] files = getFilesList();
-        String[] base64_files = files.clone();
+        FileClass[] files = getFilesList();
+       /* String[] base64_files = files.clone();
         for(int i = 0; i < files.length; i++)
         {
             try {
@@ -40,43 +40,25 @@ public class FolderObserver extends FileObserver {
                 e.printStackTrace();
                 base64_files[i] = files[i];
             }
-        }
-        return new Gson().toJson(base64_files);
+        }*/
+        return new Gson().toJson(files);
     }
 
-    public static String[] getFilesList()
+    public static FileClass[] getFilesList()
     {
         File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File[] files = folder.listFiles();
-
-        if (files != null)
-        {
-            ArrayList<String> files_names = new ArrayList<>();
-
-            for (File file: files)
-            {
-                files_names.add(file.getName());
-            }
-            String[] names = files_names.toArray(new String[0]);
-            return names;
+        FileClass[] files_list = new FileClass[files.length];
+        for (int i = 0; i < files.length; i++) {
+            files_list[i] = new FileClass(files[i], i);
         }
-        else{
-            String[] names = {"Empty"};
-            return names;
-        }
-
-
+        return files_list;
     }
 
-    public static File getFile(String encoded_name)
+    public static File getFile(String id)
     {
-        try {
-            String name = new String(Base64.decode(encoded_name, Base64.URL_SAFE), "UTF-8");
-            return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),name);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String path = FolderObserver.getFilesList()[Integer.valueOf(id)].path;
+            return new File(path);
     }
 
     @Override

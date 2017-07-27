@@ -24,6 +24,7 @@ public class FriendFileActivity extends AppCompatActivity {
     private String friendsDeviceId;
     private String friendsIpAdress;
     private String filename;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class FriendFileActivity extends AppCompatActivity {
         friendsDeviceId = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID");
         friendsIpAdress = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP");
         filename = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_FILENAME");
+        id = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_FILE_ID");
 
         TextView tv = (TextView) findViewById(R.id.friend_file_name);
         tv.setText(filename);
@@ -41,24 +43,18 @@ public class FriendFileActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFriendsFile(filename);
+                getFriendsFile(id, filename);
             }
         });
     }
 
-    private String getFriendsFile(String filename) {
+    private String getFriendsFile(String id, String title) {
         ClientLP client = new ClientLP();
         try {
-            client.getFile(friendsIpAdress, filename);
-            /*OutputStream out = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), new String(Base64.decode(filename.getBytes(), Base64.URL_SAFE))));
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            while((read = response.read(bytes)) != -1)
+            if(client.getFile(friendsIpAdress, id, title))
             {
-                out.write(bytes,0,read);
-            }*/
-            NotifyDownloadEnded(filename);
+                NotifyDownloadEnded(title);
+            }
 
             return "";
         } catch (IOException e) {
@@ -72,6 +68,6 @@ public class FriendFileActivity extends AppCompatActivity {
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         client.confirmReceived(friendsIpAdress,deviceId, filename);
         String msg = String.format("%s was transfered to %s", filename, deviceId );
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 }

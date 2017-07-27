@@ -30,8 +30,8 @@ public class ClientLP {
     {
             client = new OkHttpClient.Builder()
                     .connectTimeout(100000, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(50, TimeUnit.SECONDS).build();
+                    .writeTimeout(100000, TimeUnit.SECONDS)
+                    .readTimeout(1000000, TimeUnit.SECONDS).build();
     }
 
     private String sendLongPolling(String url) throws IOException {
@@ -66,7 +66,7 @@ public class ClientLP {
         }
     }
 
-    private InputStream sendFileRequest(String url) throws IOException
+    private boolean sendFileRequest(String url, String title) throws IOException
     {
         Request request = new Request.Builder().url("http://" + url).build();
         Log.d("BONJOUR", request.toString());
@@ -74,19 +74,12 @@ public class ClientLP {
             if (response.code() == 200)
             {
                 String[] url_split = url.split("/");
-                InputStream in = response.body().byteStream();
-                OutputStream out = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), new String(Base64.decode(url_split[url_split.length-1].getBytes(), Base64.URL_SAFE))));
-                int read = 0;
-                byte[] bytes = new byte[1024];
-
-                while((read = in.read(bytes)) != -1)
-                {
-                    out.write(bytes,0,read);
-                }
+                OutputStream out = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), title));
+                out.write(response.body().bytes());
                 out.close();
-                response.body().close();
+                return true;
             }
-            return null;
+            return false;
         }
     }
 
@@ -111,9 +104,9 @@ public class ClientLP {
         return sendRequest(url + ":8080"  +HTTPRequests.LIST_FILES);
     }
 
-    public InputStream getFile(String url, String id) throws IOException
+    public boolean getFile(String url, String id, String title) throws IOException
     {
-        return sendFileRequest(url  + ":8080" + HTTPRequests.GET_FILE + id);
+        return sendFileRequest(url  + ":8080" + HTTPRequests.GET_FILE + id, title);
     }
 
     public String confirmReceived(String url,String name, String file) throws IOException

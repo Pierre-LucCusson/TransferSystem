@@ -14,21 +14,15 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class LocationHandler {
 
-    private Location location;
-
-    public LocationHandler(Activity activity)
+    public static String calculateDistance(Location selfLocation, String latitude, String longitude)
     {
+        double lat_f = Double.parseDouble(latitude);
+        double lon_f = Double.parseDouble(longitude);
+        Location location = new Location("Server");
+        location.setLatitude(lat_f);
+        location.setLongitude(lon_f);
 
-        location = null;
+        return String.valueOf(selfLocation.distanceTo(location));
+
     }
-
-    public Location getLocation()
-    {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
 }

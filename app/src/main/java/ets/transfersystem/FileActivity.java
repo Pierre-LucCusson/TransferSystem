@@ -31,12 +31,18 @@ public class FileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file);
 
-        String[] filesInJson = getFilesList();
+        FileClass[] files = getFilesList();
+        String[] filesInJson = new String[files.length];
+
+        for (int i = 0; i < files.length; i++) {
+            filesInJson[i] = new Gson().toJson(files[i]);
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, filesInJson);
 
         ListView list = (ListView) findViewById(R.id.file_list);
         list.setAdapter(adapter);
+
     }
 
 

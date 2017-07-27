@@ -1,6 +1,9 @@
 package ets.transfersystem;
 
+import android.app.LauncherActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
+
+import java.io.IOException;
 
 /**
  * Created by Pierre-Luc on 2017-06-26.
@@ -54,8 +59,34 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private class LoopingThread extends AsyncTask<View, Void, Integer>
+    {
+        ClientLP client;
+        Context context;
+        String url;
 
+        public LoopingThread(Context context, String url)
+        {
+            client = new ClientLP();
+            this.url = url;
+            this.context = context;
+        }
+
+        @Override
+        protected Integer doInBackground(View... params) {
+            try {
+                String response = "";
+                do{
+                    response = client.getPosition(url);
+
+                }while(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

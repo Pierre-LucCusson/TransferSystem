@@ -27,6 +27,8 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
 
+import static ets.transfersystem.LocationHandler.calculateDistance;
+
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
 
@@ -62,21 +64,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             startActivity(intent);
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             Toast.makeText(getApplicationContext(), "Missing permissions for location", Toast.LENGTH_LONG).show();
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         } else {
             Toast.makeText(getApplicationContext(), "Got permissions for location", Toast.LENGTH_LONG).show();
         }
 
-        provider = lo.getBestProvider(new Criteria(), false);
-        Location location = lo.getLastKnownLocation(provider);
+        Location location = lo.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        lo.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
+        onLocationChanged(location);
         serverLP.setLastLocation(location);
     }
 
@@ -90,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         initFiles();
         initLocation();
-        longrunning = new LoopingThread(this);
 
         //Show My QR button
         final Button myQrButton = (Button) findViewById(R.id.myQrButton);
@@ -202,6 +197,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         String myCurrentFriendInfo = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND");
         if (myCurrentFriendInfo != null)
         {
+            if (longrunning != null)
+            {
+                longrunning.cancel(true);
+            }
+            longrunning = new LoopingThread(this);
             longrunning.execute(myCurrentFriendInfo.split(":")[1]);
         }
     }
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onResume() {
         super.onResume();
         try{
-            lo.requestLocationUpdates(provider, 400, 1, this);
+            lo.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
             startLongRunning();
 
         }catch (SecurityException e){
@@ -223,7 +223,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onPause() {
         super.onPause();
         lo.removeUpdates(this);
-        longrunning.cancel(true);
+        if(longrunning != null)
+        {
+            longrunning.cancel(true);
+        }
     }
 
     public void showMyQr(View view) {
@@ -303,11 +306,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("WWWWWWWWWWWWWWWWWWWWWWWWW", "onLocationChanged: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
         serverLP.setLastLocation(location);
         String[] position = getFriendPosition();
 
         TextView LatitudeView = (TextView) findViewById(R.id.PositionText);
-        LatitudeView.setText(position == null ? "Infinity" : String.valueOf(calculateDistance(location, position[1], position[0])));
+        LatitudeView.setText(position == null ? location.toString() : String.valueOf(calculateDistance(location, position[1], position[0])));
     }
 
 
@@ -345,18 +349,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onDestroy() {
         super.onDestroy();
         serverLP = null;
-    }
-
-
-    private String calculateDistance(Location selfLocation, String latitude, String longitude)
-    {
-        double r = 6371000;
-        float lat_f = Float.valueOf(latitude);
-        float lon_f = Float.valueOf(longitude);
-        double x = Math.pow(Math.sin(lat_f - selfLocation.getLatitude()/2),2);
-        double y = Math.pow(Math.sin(lon_f - selfLocation.getLongitude()/2),2);
-        return String.valueOf(2.0d * r * Math.asin(Math.sqrt(x + (Math.cos(lat_f)*Math.cos(selfLocation.getLatitude())*y))));
-
     }
 
     private class LoopingThread extends AsyncTask<String, Void, Integer>
