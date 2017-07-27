@@ -1,12 +1,14 @@
 package ets.transfersystem;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.StrictMode;
@@ -20,6 +22,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     FolderObserver fo;
     LocationManager lo;
     String provider;
+    LoopingThread longrunning;
 
     private void initFiles() {
         fo = new FolderObserver();
@@ -73,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         provider = lo.getBestProvider(new Criteria(), false);
         Location location = lo.getLastKnownLocation(provider);
         serverLP.setLastLocation(location);
-        setLocationText(location);
     }
 
     @Override
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         initFiles();
         initLocation();
+        longrunning = new LoopingThread(this);
 
         //Show My QR button
         final Button myQrButton = (Button) findViewById(R.id.myQrButton);
@@ -188,15 +193,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             deleteFriendButton.setVisibility(View.VISIBLE);
             FriendFilesButton.setVisibility(View.VISIBLE);
         }
+
+
     }
 
-    /* Request updates at startup */
+    public void startLongRunning()
+    {
+        String myCurrentFriendInfo = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND");
+        if (myCurrentFriendInfo != null)
+        {
+            longrunning.execute(myCurrentFriendInfo.split(":")[1]);
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         try{
             lo.requestLocationUpdates(provider, 400, 1, this);
+            startLongRunning();
+
         }catch (SecurityException e){
             e.printStackTrace();
         }
@@ -207,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onPause() {
         super.onPause();
         lo.removeUpdates(this);
+        longrunning.cancel(true);
     }
 
     public void showMyQr(View view) {
@@ -277,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Button button = (Button) view;
         Log.d("ButtonClick", String.format("Show My Friends Contacts button was click"));
 
-        Intent intent = new Intent(MainActivity.this, FriendsContactsActivity.class);
+        Intent intent = new Intent(MainActivity.this, FriendFilesActivity.class);
         intent.putExtra("EXTRA_CURRENT_FRIEND", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND"));
         intent.putExtra("EXTRA_CURRENT_FRIEND_ID", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_ID"));
         intent.putExtra("EXTRA_CURRENT_FRIEND_IP", getIntent().getStringExtra("EXTRA_CURRENT_FRIEND_IP"));
@@ -287,17 +304,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
         serverLP.setLastLocation(location);
-        setLocationText(location);
+        String[] position = getFriendPosition();
+
+        TextView LatitudeView = (TextView) findViewById(R.id.PositionText);
+        LatitudeView.setText(position == null ? "Infinity" : String.valueOf(calculateDistance(location, position[1], position[0])));
     }
 
-    private void setLocationText(Location location)
+
+    private String[] getFriendPosition()
     {
-        TextView LatitudeView = (TextView) findViewById(R.id.LattitudeText);
-        TextView LongitudeView = (TextView) findViewById(R.id.LongitudeText);
-
-        LatitudeView.setText(location == null ? "NULL" : String.valueOf(location.getLatitude()));
-        LongitudeView.setText(location == null ? "NULL" : String.valueOf(location.getLongitude()));
-
+        ClientLP client = new ClientLP();
+        String myCurrentFriendInfo = getIntent().getStringExtra("EXTRA_CURRENT_FRIEND");
+        if (myCurrentFriendInfo != null)
+        {
+            try {
+                return client.getPosition(myCurrentFriendInfo.split(":")[1]).split("/");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -319,5 +345,45 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onDestroy() {
         super.onDestroy();
         serverLP = null;
+    }
+
+
+    private String calculateDistance(Location selfLocation, String latitude, String longitude)
+    {
+        double r = 6371000;
+        float lat_f = Float.valueOf(latitude);
+        float lon_f = Float.valueOf(longitude);
+        double x = Math.pow(Math.sin(lat_f - selfLocation.getLatitude()/2),2);
+        double y = Math.pow(Math.sin(lon_f - selfLocation.getLongitude()/2),2);
+        return String.valueOf(2.0d * r * Math.asin(Math.sqrt(x + (Math.cos(lat_f)*Math.cos(selfLocation.getLatitude())*y))));
+
+    }
+
+    private class LoopingThread extends AsyncTask<String, Void, Integer>
+    {
+        ClientLP client;
+        Context context;
+
+        public LoopingThread(Context context)
+        {
+            client = new ClientLP();
+            this.context = context;
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+                try {
+                    String response = "";
+                    do{
+                        response = client.checkForFileChange(params[0]);
+                        NotificationEvent notificationEvent = new Gson().fromJson(response, NotificationEvent.class);
+                        Toast.makeText(context, String.format("%s : %s", notificationEvent.action.toUpperCase(), notificationEvent.filename),
+                                Toast.LENGTH_LONG).show();
+                    }while(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return null;
+        }
     }
 }

@@ -7,9 +7,11 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,15 +49,15 @@ public class FriendFileActivity extends AppCompatActivity {
     private String getFriendsFile(String filename) {
         ClientLP client = new ClientLP();
         try {
-            InputStream response = client.getFile(friendsIpAdress + ":8080", filename);
-            OutputStream out = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),filename));
+            client.getFile(friendsIpAdress, filename);
+            /*OutputStream out = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), new String(Base64.decode(filename.getBytes(), Base64.URL_SAFE))));
             int read = 0;
             byte[] bytes = new byte[1024];
 
             while((read = response.read(bytes)) != -1)
             {
                 out.write(bytes,0,read);
-            }
+            }*/
             NotifyDownloadEnded(filename);
 
             return "";
@@ -68,7 +70,8 @@ public class FriendFileActivity extends AppCompatActivity {
     private void NotifyDownloadEnded(String filename) throws IOException {
         ClientLP client = new ClientLP();
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        client.confirmReceived(friendsIpAdress + ":8080",deviceId, filename);
-        String.format("%s was transfered to %s", filename, deviceId );
+        client.confirmReceived(friendsIpAdress,deviceId, filename);
+        String msg = String.format("%s was transfered to %s", filename, deviceId );
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG);
     }
 }

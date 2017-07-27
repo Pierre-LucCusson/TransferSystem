@@ -87,16 +87,10 @@
                 android:layout_below="@id/myCurrentFriendText"
                 android:layout_centerHorizontal="true">
                 <TextView
-                    android:id="@+id/LattitudeText"
+                    android:id="@+id/PositionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lattitude"/>
-
-                <TextView
-                    android:id="@+id/LongitudeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Longitude"/>
+                    android:text="Infinity"/>
             </LinearLayout>
 
             <Button

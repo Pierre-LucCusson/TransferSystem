@@ -82,7 +82,7 @@ public class ServerLP extends NanoHTTPD {
         if(session.getUri().contains(HTTPRequests.LIST_FRIENDS))
         {
             Log.d("ServerSend", contacts.getAllContactsToJson());
-            return new Response(Response.Status.OK, MIME_PLAINTEXT, FolderObserver.listFiles());
+            return new Response(Response.Status.OK, MIME_PLAINTEXT, contacts.getAllContactsToJson());
         }
         else if(session.getUri().contains(HTTPRequests.GET_FRIEND))
         {

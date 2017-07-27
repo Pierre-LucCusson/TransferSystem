@@ -65,7 +65,7 @@ public class FriendsContactsActivity extends AppCompatActivity {
                 ClientLP client = new ClientLP();
                 try {
                     Log.d("messageNFC clientID", contact.getId());
-                    String response = client.getFriend(friendsIpAdress + ":8080", contact.getId());
+                    String response = client.getFriend(friendsIpAdress, contact.getId());
                     myContacts.setToOnlineAndSave(friendsDeviceId);
                     Intent nfcReceiverIntent = new Intent(FriendsContactsActivity.this, NFCBeamReceiverActivity.class);
                     startActivity(nfcReceiverIntent);
@@ -83,7 +83,7 @@ public class FriendsContactsActivity extends AppCompatActivity {
     private String getFriendsContactsInJson() {
         ClientLP client = new ClientLP();
         try {
-            String response = client.listFriend(friendsIpAdress + ":8080");
+            String response = client.listFriend(friendsIpAdress);
             myContacts.setToOnlineAndSave(friendsDeviceId);
             return response;
         } catch (IOException e) {

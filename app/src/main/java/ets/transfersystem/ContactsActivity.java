@@ -31,10 +31,12 @@ public class ContactsActivity extends AppCompatActivity {
         orderContacts.setOrderButtons();
         String[] contactsInJson = orderContacts.getContactsByOrderInJson();
 
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_list, contactsInJson);
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
+
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -51,6 +53,8 @@ public class ContactsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
     }
 
